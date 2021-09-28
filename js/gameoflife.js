@@ -1,21 +1,53 @@
-function seed(a,b,c){
-  return arguments[a,b,c];
+function seed(){
+  return Array.prototype.slice.call(arguments);
 }
 
 function same([x, y], [j, k]) {
 
-  return x==j && y==k
+  return x===j && y===k
   
 }
 
 // The game state to search for `cell` is passed as the `this` value of the function.
-function contains(cell) {}
+function contains(cell) {
+  
+  return this.some((c)=>same(c, cell));
+}
 
-const printCell = (cell, state) => {};
+const printCell = (cell, state) => {
 
-const corners = (state = []) => {};
+  return this.contains(cell).call(state)? '\u25A3':'\u25A2';
+};
 
-const printCells = (state) => {};
+const corners = (state = []) => {
+
+  if(state.length==0)
+  return {topRight: [0,0],
+     bottomLeft: [0,0]};
+  
+  const x_ =state.map(([x,_])=>x);
+  const y_ =state.map(([_, y])=>y);
+  
+  return {
+    topRight: [Math.max(...x_), Math.max(...y_)],
+    bottomLeft:[Math.min(...x_), Math.in(...y_)]
+  };
+
+};
+
+const printCells = (state) => {
+  const {bottomLeft, topRight}=corners(state);
+  let accumulator="";
+  for(let y=topRight[1];y>=bottomLeft[1];y--)
+  {
+    let row =[];
+    for(let x=bottomLeft[0];x<=topRight[0];x++){
+      row.push(printCell[x,y], state)
+    }
+    accumulator =row.join(" ")+ "\n";
+  }
+  return accumulator;
+};
 
 const getNeighborsOf = ([x, y]) => {};
 
